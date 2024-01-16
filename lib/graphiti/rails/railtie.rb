@@ -130,8 +130,12 @@ module Graphiti
               method = :DELETE
           end
 
+          # New versions of actionpack can't handle symbols in the recognize_path function
+          # Old: https://github.com/rails/rails/blob/6-1-stable/actionpack/lib/action_dispatch/routing/route_set.rb#L847
+          # New: https://github.com/rails/rails/blob/main/actionpack/lib/action_dispatch/routing/route_set.rb#L888
+          # So we make sure that it is a string when passing the path
           route = begin
-                    ::Rails.application.routes.recognize_path(path, method: method)
+                    ::Rails.application.routes.recognize_path(path.to_s, method: method)
                   rescue
                     nil
                   end
